@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 
+import { Paper } from '@material-ui/core';
+
 class Streak extends Component {
   constructor() {
     super();
-    const name = "Anthony Mercado";
     this.state = {
 
     };
@@ -12,8 +13,9 @@ class Streak extends Component {
 
   render() {
     return (
-      <div>
-          <h1>Hello, {name}</h1>
+      <div className="main">
+          <h1>Hello</h1>
+          <Paper variant="outlined" square elevation={3}/>
       </div>
     );
   }
