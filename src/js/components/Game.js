@@ -10,7 +10,7 @@ class Game extends React.Component {
     this.state = {
       history: [{
         squares: Array(9).fill(null),
-        locations: Array(9).fill(null)
+        locations: []
       }],
       stepNum: 0,
       xIsNext: true,
@@ -23,11 +23,11 @@ class Game extends React.Component {
     const squares = current.squares.slice();
     const locations = current.locations.slice();
 
-    if(calculateWinner(squares) || squares[i] || locations[i]) {
+    if(calculateWinner(squares) || squares[i]) {
       return;
     }
     squares[i] = this.state.xIsNext ? 'X' : 'O';
-    locations[i] = colRow(i);
+    locations.push(colRow(i));
     this.setState({
       history: history.concat([{
         squares: squares,
@@ -52,7 +52,7 @@ class Game extends React.Component {
 
     const moves = history.map((step, move) => {
       const desc = move ?
-        'Go to move #' + move + ' at ':
+        'Go to move #' + move :
         'Go to game start'
       return (
         <li key={move}>
@@ -61,7 +61,17 @@ class Game extends React.Component {
       );
     })
 
-    
+    const locations = history.map((step, move) => {
+      console.log(step.locations[step.locations.length - 1])
+      const desc = step.locations[step.locations.length - 1] ?
+        'Located at ' + step.locations[step.locations.length - 1] :
+        'Location of Moves:'
+      return (
+        <li key={ move }>
+          <p>{ desc }</p>
+        </li>
+      );
+    })
 
     let status;
     if(winner) {
@@ -84,6 +94,7 @@ class Game extends React.Component {
         <div className="game-info">
           <div>{ status }</div>
           <ol>{ moves }</ol>
+          <ul>{ locations }</ul>
         </div>
       </div>
     );
