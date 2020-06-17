@@ -1,14 +1,16 @@
 /* eslint-disable */
 import React, { Component } from 'react';
 import Board from './Board';
-import calculateWinner from '../utils';
+import calculateWinner from '../utils/calculateWinner';
+import colRow from '../utils/colRow';
 
 class Game extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       history: [{
-        squares: Array(9).fill(null)
+        squares: Array(9).fill(null),
+        locations: Array(9).fill(null)
       }],
       stepNum: 0,
       xIsNext: true,
@@ -19,13 +21,17 @@ class Game extends React.Component {
     const history = this.state.history.slice(0, this.state.stepNum + 1);
     const current = history[history.length - 1];
     const squares = current.squares.slice();
-    if(calculateWinner(squares) || squares[i]) {
+    const locations = current.locations.slice();
+
+    if(calculateWinner(squares) || squares[i] || locations[i]) {
       return;
     }
     squares[i] = this.state.xIsNext ? 'X' : 'O';
+    locations[i] = colRow(i);
     this.setState({
       history: history.concat([{
         squares: squares,
+        locations: locations
       }]),
       stepNum: history.length,
       xIsNext: !this.state.xIsNext
@@ -42,25 +48,11 @@ class Game extends React.Component {
   render() {
     const { history, xIsNext, stepNum } = this.state;
     const current = history[stepNum];
-    const previous = (stepNum > 0) ? history[stepNum - 1] : null;
-    let index;
-
-    console.log('Previous', previous)
-    console.log('Current', current)
-
-    if(previous) {
-      for(let i = 0; i < previous.squares.length; i ++) {
-        if(previous.squares[i] !== current.squares[i]) {
-          index = i;
-        }
-      }
-    }
-
     const winner = calculateWinner(current.squares);
 
     const moves = history.map((step, move) => {
       const desc = move ?
-        'Go to move #' + move + ' at ' + index:
+        'Go to move #' + move + ' at ':
         'Go to game start'
       return (
         <li key={move}>
@@ -68,6 +60,8 @@ class Game extends React.Component {
         </li>
       );
     })
+
+    
 
     let status;
     if(winner) {

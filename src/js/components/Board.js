@@ -1,7 +1,6 @@
 /* eslint-disable */
 import React, { Component } from 'react';
 import Square from './Square';
-import calculateWinner from '../utils';
 
 class Board extends Component {
   renderSquare(i) {
